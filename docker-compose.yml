@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+  golang:
+    build:
+      context: .
+      dockerfile: ./golang/Dockerfile
+    command: fresh -c fresh.conf
