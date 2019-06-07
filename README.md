@@ -45,7 +45,22 @@ message HelloReply {
 
 ## Go
 
-```go
+```go:server
+import (
+  "google.golang.org/grpc"
+  pb "google.golang.org/grpc/examples/helloworld/helloworld"
+)
+func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
+  log.Printf("Received: %v", in.Name)
+  return &pb.HelloReply{Message: "Hello " + in.Name}, nil
+}
+func main() {
+  s := grpc.NewServer()
+  pb.RegisterGreeterServer(s, &server{})
+}
+```
+
+```go:client
 import (
   ...
   pb "google.golang.org/grpc/examples/helloworld/helloworld"
