@@ -45,7 +45,9 @@ message HelloReply {
 
 ## Go
 
-```go:server
+server
+
+```go
 import (
   "google.golang.org/grpc"
   pb "google.golang.org/grpc/examples/helloworld/helloworld"
@@ -60,7 +62,9 @@ func main() {
 }
 ```
 
-```go:client
+client
+
+```go
 import (
   ...
   pb "google.golang.org/grpc/examples/helloworld/helloworld"
