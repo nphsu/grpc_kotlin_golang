@@ -1,6 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '2.1.5.RELEASE'
 	id 'java'
+	id 'com.google.protobuf' version '0.8.8'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -10,10 +11,55 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '12'
 
 repositories {
-	mavenCentral()
+	maven { // The google mirror is less flaky than mavenCentral()
+		url "https://maven-central.storage-download.googleapis.com/repos/central/data/" }
+	mavenLocal()
 }
+def grpcVersion = '1.21.0' // CURRENT_GRPC_VERSION
+def protobufVersion = '3.7.1'
+def protocVersion = protobufVersion
 
 dependencies {
+//	implementation 'org.lognet.springboot.grpc.GRpcService'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation "io.grpc:grpc-protobuf:${grpcVersion}"
+	implementation "io.grpc:grpc-stub:${grpcVersion}"
+	implementation "com.google.protobuf:protobuf-java-util:${protobufVersion}"
+	runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+sourceSets {
+	main {
+		proto {
+			srcDir 'src/main/proto'
+		}
+		java {
+			// include self written and generated code
+			srcDirs 'src/main/java', 'generated-sources/main/java', 'generated-sources/main/grpc'
+		}
+	}
+}
+
+protobuf {
+	// Configure the protoc executable
+	protoc {
+		// Download from repositories
+		artifact = "com.google.protobuf:protoc:${protocVersion}"
+	}
+
+	// Configure the codegen plugins
+	plugins {
+		grpc {
+			artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}"
+		}
+	}
+
+	generateProtoTasks.generatedFilesBaseDir = 'generated-sources'
+
+	generateProtoTasks {
+		all()*.plugins {
+			grpc {}
+		}
+	}
 }

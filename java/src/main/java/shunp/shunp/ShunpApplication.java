@@ -8,6 +8,7 @@ public class ShunpApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ShunpApplication.class, args);
+
 	}
 
 }
