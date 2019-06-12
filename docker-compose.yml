@@ -1,8 +1,19 @@
 version: "3"
 
 services:
-  golang:
-    build:
-      context: .
-      dockerfile: ./golang/Dockerfile
+  grpc_golang:
+    build: ./golang
+    container_name: grpc_golang
+    ports:
+      - "28081:28081"
     command: fresh -c fresh.conf
+  grpc_java:
+    build: ./java
+    container_name: grpc_java
+    ports:
+      - "8080:8080"
+    environment: 
+      - grpcserver=grpc_golang 
+    depends_on: 
+      - grpc_golang
+    command: ./gradlew bootRun 
