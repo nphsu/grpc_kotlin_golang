@@ -22,7 +22,7 @@ public class HelloController {
     @Value("${grpcserver:localhost}")
     private String host;
 
-    @Value("${grpcserver.port:28081")
+    @Value("${grpcserver.port:28081}")
     private Integer port;
 
     @PostConstruct
